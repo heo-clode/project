@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.BoardMapper">
+
+	<!-- 시퀀스 수정 -->
+	<insert id="write" parameterType="com.tang.pan.board.BoardVO">
+		insert into
+		bp(bp_bocode, bp_no,
+		bp_name, bp_content, bp_writer, bp_mmcode)
+		values(#{bp_bocode,
+		jdbcType=VARCHAR},
+		tang.seq_bno.nextval, #{bp_name, jdbcType=VARCHAR},
+		#{bp_content,
+		jdbcType=VARCHAR}, #{bp_writer, jdbcType=VARCHAR},
+		#{bp_mmcode, jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.tang.pan.board.BoardVO">
+		update bp set
+		bp_name =
+		#{bp_name},
+		bp_content = #{bp_content}
+		where bp_no = #{bp_no}
+	</update>
+
+	<delete id="delete" parameterType="com.tang.pan.board.BoardVO">
+		delete from bp
+		where bp_no =
+		#{bp_no} AND bp_bocode = #{bp_bocode, jdbcType=VARCHAR}
+	</delete>
+
+	<!-- 수정 -->
+	<update id="updateViewCnt"
+		parameterType="com.tang.pan.board.BoardVO">
+		UPDATE bp
+		SET VIEW_CNT = VIEW_CNT + 1
+		WHERE bp_no =
+		#{bp_no}
+	</update>
+
+
+	<select id="getBoardList"
+		resultType="com.tang.pan.board.BoardVO"
+		parameterType="com.tang.pan.board.SearchCriteria">
+		SELECT bp_no, bp_name, bp_writer, bp_mmcode, bp_content, bp_count,
+		bp_like,
+		bp_date
+		FROM (SELECT bp_no, bp_name, bp_writer, bp_mmcode,
+		bp_content, bp_count,
+		bp_like,
+		bp_date,
+		ROW_NUMBER() OVER(ORDER BY bp_no
+		DESC) AS RNUM
+		FROM BP
+		WHERE 1=1 AND bp_bocode = #{bo_code,
+		jdbcType=VARCHAR}
+		<include refid="search" />
+		) MP
+		WHERE RNUM
+		BETWEEN #{rowStart, jdbcType=VARCHAR}
+		AND #{rowEnd,
+		jdbcType=VARCHAR}
+		ORDER BY bp_no DESC
+	</select>
+
+	<select id="getManagerList"
+		resultType="com.tang.pan.board.BoardVO"
+		parameterType="com.tang.pan.board.SearchCriteria">
+		SELECT bp_no, bp_name, bp_writer, bp_mmcode, bp_content, bp_count,
+		bp_like,
+		bp_date
+		FROM (SELECT bp_no, bp_name, bp_writer, bp_mmcode,
+		bp_content, bp_count,
+		bp_like,
+		bp_date,
+		ROW_NUMBER() OVER(ORDER BY bp_no
+		DESC) AS RNUM
+		FROM BP
+		WHERE 1=1 AND
+		<include refid="search" />
+		) MP
+		WHERE RNUM
+		BETWEEN #{rowStart, jdbcType=VARCHAR}
+		AND #{rowEnd,
+		jdbcType=VARCHAR}
+		ORDER BY bp_no DESC
+	</select>
+
+	<select id="view" resultType="com.tang.pan.board.BoardVO">
+		SELECT
+		bp_no, bp_name, bp_content,
+		bp_writer, bp_mmcode, bp_date,
+		bp_like, bp_count
+		FROM bp WHERE bp_no =
+		#{bp_no} AND bp_bocode = #{bp_bocode}
+	</select>
+
+	<select id="listCount"
+		parameterType="com.tang.pan.board.SearchCriteria" resultType="int">
+		SELECT COUNT(bp_no) FROM bp
+		WHERE 1=1
+		<include refid="search" />
+		AND bp_no > 0
+	</select>
+
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()"> AND bp_name LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'c'.toString()"> AND bp_content LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'w'.toString()"> AND bp_writer LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'tc'.toString()"> AND (bp_name LIKE '%' || #{keyword} || '%') or
+				(bp_content LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+
+	<update id="viewCnt">
+		update bp set bp_count = bp_count+1 where bp_no = #{bp_no}
+	</update>
+
+</mapper>

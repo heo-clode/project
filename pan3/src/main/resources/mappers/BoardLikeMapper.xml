@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.BoardLikeMapper">
+	<insert id="createBoardLike" parameterType="com.tang.pan.like.BoardLikeVO">
+            INSERT INTO LI(li_no, li_bpno, li_mmcode)
+            VALUES (TANG.seg_lino.nextval, #{li_bpno}, #{li_mmcode})
+        </insert>
+
+        <delete id="deleteBoardLike" parameterType="com.tang.pan.like.BoardLikeVO">
+            DELETE FROM li
+            WHERE li_bpno = #{li_bpno} AND li_mmcode = #{li_mmcode}
+        </delete>
+
+        <select id="updateBoardLike" parameterType="com.tang.pan.like.BoardLikeVO">
+            UPDATE bp
+            SET
+            bp_like = (SELECT COUNT(*)
+            FROM li
+            WHERE li_bpno = #{li_bpno})
+            WHERE bp_no = #{li_bpno}
+        </select>
+
+        <select id="getBoardLike" resultType="int" parameterType="com.tang.pan.board.BoardVO">
+            SELECT COUNT(li_no) FROM li WHERE li_bpno = #{bp_no} AND li_mmcode = #{bp_mmcode}
+        </select>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.MypageMapper">
+
+	<select id="mypage" resultType="com.tang.pan.signup.UserVO"
+		parameterType="com.tang.pan.signup.UserVO">
+		select mm_id, mm_name, mm_pnum, mm_email, mm_date from
+		mm where mm_id= #{mm_id, jdbcType=VARCHAR}
+	</select>
+
+
+	<update id="updateMyPage"
+		parameterType="com.tang.pan.signup.UserVO">
+		update mm set
+		mm_name = #{mm_name , jdbcType=VARCHAR}, mm_pnum = #{mm_pnum,
+		jdbcType=VARCHAR}, mm_email = #{mm_email, jdbcType=VARCHAR}
+		where mm_id = #{mm_id, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteMyPage"
+		parameterType="com.tang.pan.signup.UserVO">
+		delete from mm where mm_id = #{mm_id, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="writeBoardMyPage"
+		parameterType="com.tang.pan.signup.UserVO"
+		resultType="com.tang.pan.reply.ReplyDTO">
+		select bo_name, bp_name, bp_content from bp, bo where bp_mmcode = #{mm_code, jdbcType=VARCHAR} and bp_bocode = bo_code
+	</select>
+
+	<select id="writeReplyMyPage"
+		parameterType="com.tang.pan.signup.UserVO"
+		resultType="com.tang.pan.reply.ReplyDTO">
+		select bp_name, bo_name, re_content from bo,bp,re
+		where re_mmcode=#{mm_code, jdbcType=VARCHAR}
+		and re_bpno = bp_no
+		and bp_bocode=re_bpbocode
+		and bo_code=re_bpbocode
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+

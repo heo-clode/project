@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.ManagerMapper">
+
+	<select id="scList" parameterType="com.tang.pan.search.SchoolVO"
+		resultType="com.tang.pan.search.SchoolVO">
+		select sc_code, sc_name, sc_local from sc order by sc_code ASC
+	</select>
+
+	<select id="mmList" parameterType="com.tang.pan.signup.UserVO"
+		resultType="com.tang.pan.signup.UserVO">
+		select mm_code, mm_sccode, mm_id, mm_pw, mm_name, mm_email,
+		mm_pnum,
+		mm_date, mm_lev from mm order by mm_code ASC
+	</select>
+
+	<select resultType="com.tang.pan.board.BoardVO" id="BoardAll"> select
+		bp_bocode, bp_no, bp_name, bp_content, bp_mmcode, bp_writer, bp_date,
+		bp_like, bp_count from bp
+	</select>
+
+	<select resultType="com.tang.pan.reply.ReplyVO" id="ReplyAll"> select
+		re_no, re_bpbocode, re_bpno, re_content, re_mmcode, re_writer, re_date
+		from re
+	</select>
+
+	<delete id="scDel" parameterType="String">
+		delete from sc where sc_code = #{sc_code, jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="mmDel" parameterType="String">
+		delete from mm where mm_code = #{mm_code, jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="bpDel" parameterType="int">
+		delete from bp where bp_no = #{bp_no}
+	</delete>
+
+	<delete id="reDel" parameterType="int">
+		delete from re where re_no = #{re_no}
+	</delete>
+
+	<delete id="sc_mmDel" parameterType="String">
+		delete from mm where mm_sccode = #{sc_code, jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="sc_boDel" parameterType="String">
+		delete from bo where bo_sccode = #{sc_code, jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="mm_bpDel" parameterType="String">
+		delete from bp where bp_mmcode = #{mm_code, jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="mm_reDel" parameterType="String">
+		delete from re where re_mmcode = #{mm_code, jdbcType=VARCHAR}
+	</delete>
+
+	<insert parameterType="com.tang.pan.search.SchoolVO" id="scReg"> insert
+		into sc(sc_code, sc_name, sc_local) values(#{sc_code},
+		#{sc_name},#{sc_local} ) </insert>
+
+	<insert parameterType="com.tang.pan.signup.UserVO" id="mmReg"> insert
+		into mm(mm_code, mm_sccode, mm_id, mm_pw, mm_name, mm_email, mm_pnum)
+		values('M'||LPAD(MM_SEQ.nextval,4,'0'), #{mm_sccode,
+		jdbcType=VARCHAR}, #{mm_id, jdbcType=VARCHAR},#{mm_pw,
+		jdbcType=VARCHAR}, #{mm_name, jdbcType=VARCHAR}, #{mm_email,
+		jdbcType=VARCHAR},#{mm_pnum, jdbcType=VARCHAR} ) </insert>
+
+</mapper>

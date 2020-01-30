@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.SignupMapper">
+
+<select id="UserInsert" parameterType="com.tang.pan.signup.UserVO">
+insert into mm(mm_code, mm_sccode, mm_id, mm_pw, mm_name, mm_email, mm_pnum)
+values('M'||LPAD(MM_SEQ.nextval,4,'0'),'${mm_sccode}', '${mm_id}', '${mm_pw}', '${mm_name}', '${mm_email}'||'@'||'${mm_email2}', '${mm_pnum}')
+</select>
+
+<select id = "idOverlapCheck" resultType = "int" parameterType="com.tang.pan.signup.UserVO">
+	select count(mm_id) from mm where mm_id like #{mm_id}
+</select>
+
+</mapper>

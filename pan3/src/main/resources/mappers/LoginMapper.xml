@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.LoginMapper">
+
+<select id="login" resultType="com.tang.pan.signup.UserVO">
+select mm_code, mm_sccode, mm_id, mm_pw, mm_name, mm_email, mm_lev from mm where mm_id like #{mm_id} and mm_pw like #{mm_pw}
+</select>
+
+<select id = "idCheck" resultType = "com.tang.pan.signup.UserVO">
+select mm_id from mm where mm_id like #{mm_id} and mm_pw like #{mm_pw}
+</select>
+
+</mapper>

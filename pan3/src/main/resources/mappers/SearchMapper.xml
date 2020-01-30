@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tang.pan.mappers.SearchMapper">
+
+<select id = "idSearch" resultType = "com.tang.pan.signup.UserVO">
+select mm_id from mm where mm_name = #{mm_name} AND mm_pnum = #{mm_pnum}
+</select>
+
+
+<select id = "pwSearch" resultType = "com.tang.pan.signup.UserVO">
+select mm_pw from mm where mm_name = #{mm_name} AND mm_pnum = #{mm_pnum} AND mm_id = #{mm_id}
+</select>
+
+<select id = "schoolSearch" resultType = "String">
+select sc_name from sc where sc_name like '%'||#{sc_name}||'%'
+</select>
+
+<select id = "scSearch" resultType = "com.tang.pan.search.SchoolVO">
+select sc_code, sc_name from sc where sc_name like '%'||#{sc_name, jdbcType=VARCHAR}||'%'
+</select>
+
+</mapper>
